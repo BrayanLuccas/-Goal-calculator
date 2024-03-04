@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Metas</title>
+
+    <style>
+        body {
+            background-image: url('./36e6381017cff9bb037586dc0d4e77b9.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calculator {
+            max-width: 2400px;
+            width: 90%;
+            padding: 80px;
+            border: 1px solid #000000;
+            border-radius: 30px;
+            background-color: #ffffff;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: -50px;
+        }
+
+        label {
+            font-size: 20px;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: calc(100% - 8px);
+            padding: 12px;
+            font-size: 15px;
+            margin: 0 auto 15px;
+            display: block;
+            color: #000000;
+        }
+
+        button {
+            width: 105%;
+            padding: 10px;
+            font-size: 15px;
+            background-color: black;
+            color: white;
+        }
+
+        #resultado p {
+            font-weight: bold;
+        }
+
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #b9b9b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Calculadora de Metas</h1>
+        <form id="metaForm">
+            <label for="metaNuvens">Meta diária de casos:</label><br>
+            <input type="number" id="metaNuvens" placeholder="Digite a meta diária" required><br>
+
+            <label for="cargaHoraria">Carga horária:</label><br>
+            <input type="text" id="cargaHoraria" placeholder="00:00" required pattern="[0-9]{2}:[0-9]{2}"><br>
+
+            <label for="tempoConsiderado">Tempo a ser considerado:</label><br>
+            <input type="text" id="tempoConsiderado" placeholder="00:00" required pattern="[0-9]{2}:[0-9]{2}"><br>
+
+            <button type="button" onclick="calcularMeta()">Calcular</button>
+        </form>
+
+        <div id="resultado"></div>
+    </div>
+
+    <div class="watermark">Developed by Brayan Lucas</div>
+
+    <script>
+        function calcularMeta() {
+            const metaNuvens = parseInt(document.getElementById('metaNuvens').value);
+            const cargaHoraria = document.getElementById('cargaHoraria').value;
+            const tempoConsiderado = document.getElementById('tempoConsiderado').value;
+            const [horasCarga, minutosCarga] = cargaHoraria.split(':').map(Number);
+            const [horasConsideradas, minutosConsiderados] = tempoConsiderado.split(':').map(Number);
+            
+            const cargaHorariaTotalMinutos = horasCarga * 60 + minutosCarga;
+            const tempoConsideradoTotalMinutos = horasConsideradas * 60 + minutosConsiderados;
+            const tempoTotalDisponivel = cargaHorariaTotalMinutos - tempoConsideradoTotalMinutos;
+            
+            const metaPorHoraNuvens = Math.ceil(metaNuvens / (cargaHorariaTotalMinutos / 60));
+            const metaFinalNuvens = Math.ceil(metaNuvens - (tempoConsideradoTotalMinutos / cargaHorariaTotalMinutos * metaNuvens));
+            
+            const metaPorHoraEstrelas = Math.ceil(metaFinalNuvens * 1.2 / (cargaHorariaTotalMinutos / 60));
+            const metaFinalEstrelas = Math.ceil(metaFinalNuvens * 1.2 - (tempoConsideradoTotalMinutos / cargaHorariaTotalMinutos * metaFinalNuvens * 1.2));
+
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = `
+                <p><strong>Meta nuvens:</strong> ${metaFinalNuvens}</p>
+                <p><strong>Meta nuvens por hora:</strong> ${metaPorHoraNuvens}</p>
+                <p><strong>Meta estrelas:</strong> ${metaFinalEstrelas}</p>
+                <p><strong>Meta estrelas por hora:</strong> ${metaPorHoraEstrelas + 1}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
